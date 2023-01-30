@@ -7,6 +7,7 @@ import Navbars from "../Components/Navbar";
 import { NavLink } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
+import pic from '../images/pic.jpg'
 
 export default function Article() {
   const [article, setArticle] = useState<PostAttribute>();
@@ -23,7 +24,7 @@ export default function Article() {
         setArticle(response.data.post);
         setUser(response.data.user);
         
-        console.log('postss', response.data)
+        // console.log('postss', response.data)
       })
       .catch((error) => console.log(error))
 
@@ -35,7 +36,7 @@ export default function Article() {
 
   useEffect(() => {
     if(Id === user){
-      console.log('ygyrdrjytrdjr')
+      // console.log('ygyrdrjytrdjr')
       setSuccess(true)
       
   
@@ -73,7 +74,7 @@ export default function Article() {
       </header>
       <Row className="article">
         <div className="story">
-          <img src="https://unsplash.com/photos/SGY0LIfTKZ4" alt="pic" />
+          <img src={pic} alt="pic" />
 
 <hr />
           <div>

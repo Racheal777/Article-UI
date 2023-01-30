@@ -9,7 +9,8 @@ import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
 import axios from "axios";
 import Navbars from "../Components/Navbar";
-
+import pic2 from '../images/pic2.jpg'
+import ReactPaginate from "react-paginate";
 
 export interface PostAttribute {
     _id:any
@@ -29,8 +30,9 @@ export default function Articles() {
   
 const [articles, setArticles] = useState<PostAttribute[]>([])
   
-
+const [currentPage, setCurrentPage] = useState(0);
   
+
 
   useEffect(() => {
     const getPosts = async() => {
@@ -46,9 +48,18 @@ const [articles, setArticles] = useState<PostAttribute[]>([])
       getPosts()
   }, []);
 
+  const PER_PAGE = 3;
+const offset = currentPage * PER_PAGE;
+ articles.slice(offset, offset + PER_PAGE)
+    
+const pageCount = Math.ceil(articles.length / PER_PAGE);
+
+function handlePageClick({ selected }:any) {
+  setCurrentPage(selected);
+}
 
   return (
-    <div>
+    <>
 
 <header>
   <Navbars/>
@@ -61,10 +72,10 @@ const [articles, setArticles] = useState<PostAttribute[]>([])
             </div>
         
         <Row xs={1} md={3} className="cards g-6">
-          {articles.map((item) => (
+          {articles.slice(offset, offset + PER_PAGE).map((item) => (
              <Col>
              <Card className="cardz" key={item._id}>
-             <Card.Img variant="top" src="https://unsplash.com/photos/0J8thHZfosE" />
+             <Card.Img variant="top" src={pic2} />
              <Card.Body>
 
             
@@ -86,10 +97,25 @@ const [articles, setArticles] = useState<PostAttribute[]>([])
           </Card>
         </Col>
           ))}
-         
-         </Row>
+
+          
+ </Row>
 
       </section>
-    </div>
+      <ReactPaginate
+        previousLabel={"← Previous "}
+        nextLabel={" Next → "}
+        pageCount={pageCount}
+        onPageChange={handlePageClick}
+        containerClassName={"pagination"}
+        previousLinkClassName={"pagination__link"}
+        nextLinkClassName={"pagination__link"}
+        disabledClassName={"pagination__link--disabled"}
+        activeClassName={"pagination__link--active"}
+        
+      />
+      
+      
+    </>
   );
 }

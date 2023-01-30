@@ -4,7 +4,7 @@
 
 *{
     margin: 0;
-    padding: 0;
+    padding: 0 ;
     box-sizing: border-box;
 }
 
@@ -80,20 +80,22 @@ border: none;
 }
 
 .flex{
-    display: flex;
-    justify-content: center;
+    
     padding: 1em;
-    margin: 1em auto;
+    margin: 4em auto;
 }
 
 .btn-delete button{
     background-color: rgb(246, 20, 20);
     border: none;
-    padding: 0.7em;
+    padding: 0.4em 1.4em;
     border-radius: 5px;
     
 
 }
+
+
+
 
 .btn-delete a{
     text-decoration: none;
@@ -101,3 +103,53 @@ border: none;
     font-weight: bold;
     color: white
 }
+
+.story img{
+    width: 50%;
+    height: 50%;
+    margin: 2em auto;
+}
+
+.disc p{
+    margin: 1em 3em;
+    padding: 1em;
+    font-size: 1.4em;
+    
+}
+
+.author span{
+    font-size: 1.2em;
+    font-weight: bold;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: rgb(2, 25, 24);
+}
+
+.pagination {
+    display: flex;
+    justify-content: space-evenly;
+    list-style-type: none;
+    cursor: pointer;
+  }
+  
+  .pagination a {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid rgb(7, 186, 180);
+    color: rgb(5, 209, 199);
+    list-style-type: none;
+  }
+  
+  .pagination__link {
+    font-weight: bold;
+  }
+  
+  .pagination__link--active a {
+    color: #fff;
+    background: #14cebb;
+  }
+  
+  .pagination__link--disabled a {
+    color: rgb(198, 197, 202);
+    border: 1px solid rgb(198, 197, 202);
+  }
+  
