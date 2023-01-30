@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Joi from "joi";
 import { NavLink, Link } from "react-router-dom";
 import {
   Row,
@@ -9,16 +10,26 @@ import {
 } from "react-bootstrap";
 import { Navigate, useNavigate } from "react-router-dom";
 
+
+export const UserSchema = Joi.object({
+  
+  email: Joi.string()
+    .required()
+    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } }),
+  password: Joi.string().required().min(7),
+  
+});
+
+
 export default function Login() {
   //state for the user input
-  const [loading, setLoading] = useState(false);
+ 
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [emailError, setEmailError] = useState("");
-  const [email2Error, setEmail2Error] = useState("");
-  const [verifyerror, setVerifyError] = useState("");
+  
   const [passwordError, setPasswordError] = useState("");
 
   const navigate = useNavigate();
@@ -28,48 +39,50 @@ export default function Login() {
   const addUser = async (e:any) => {
     try {
       e.preventDefault();
-      if (email === "") {
-        return setEmailError("Please enter email");
-      } else if (password === "") {
-        return setPasswordError("Please enter password");
-      }
-      setLoading(true);
-      const login = await axios.post(
-        "/login",
-        {
-          email,
-          password,
+      
+      const { error, value } = UserSchema.validate({
+        
+        password,
+        email,
+      });
+      if (error) {
+        setError(error.message);
+        
+      }else{
+        const login = await axios.post(
+          "/login",
+          {
+            email,
+            password,
+          }
+          
+        );
+  
+        const res = login.data;
+        console.log('user',res)
+        setEmail("");
+        setPassword("");
+        
+        //if user is found, navigate the user to the todo app
+        if (res) {
+          navigate("/allposts");
+          const id = window.localStorage.setItem("userId", (res._id));
+          console.log('iddd',id)
         }
-        
-      );
+        console.log('userrrrrrr',)
 
-      const res = login.data;
-      console.log(res)
-      setEmail("");
-      setPassword("");
-      setLoading(false);
-      // console.log(res)
-      //if user is found, navigate the user to the todo app
-      if (res) {
-        navigate("/todo");
-        window.localStorage.setItem("userId", JSON.stringify(res._id));
-        
-      }
-
+  
+      }  
       // console.log(res);
     } catch (error:any) {
-      if (error.message.includes("401")) {
-        setError("Email or password does not exist");
+      if (error) {
+        setEmailError(error.message);
       }
 
-      console.log(error);
+      console.log(error.message);
     }
   };
-  // console.log(email, password);
-
-  // useEffect(() => {
-  //   console.log("user is loading");
-  // }, [loading]);
+  
 
   return (
     <div>
@@ -83,7 +96,7 @@ export default function Login() {
                   <h2>Login</h2>
                 </div>
                 <div className="full">{error && <span> {error} </span>}</div>
-                <div className="full">{verifyerror && <span> {verifyerror} <Link to = "/resend-link">Resend Link</Link> </span>}</div>
+                
 
                 <div className="full">
                   <label>Email</label>
@@ -106,7 +119,7 @@ export default function Login() {
                     placeholder="*********"
                     onChange={(e) => setPassword(e.target.value)}
                   />
-                  {!password && <span> {passwordError} </span>}
+                  
                 </div>
 
                 <button type="submit" onClick={addUser}>

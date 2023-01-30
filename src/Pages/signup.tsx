@@ -1,84 +1,69 @@
 import axios from "axios";
 import Joi from "joi";
 import React, { useState } from "react";
-import {
-  Row,
-  Col,
-  Container,
-  
-} from "react-bootstrap";
+import { Row, Col, Container } from "react-bootstrap";
 
-import { Navigate, NavLink, useNavigate } from "react-router-dom";
+import {  NavLink, useNavigate } from "react-router-dom";
 
-export const UserSchema = Joi
-  .object({
-    
-    username: Joi.string().min(3)
-    .max(30),
-    email: Joi.string().required().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }),
-    password: Joi.string().required().min(7),
-    repeat_password: Joi.ref('password'),
-    
-  })
+//schema validation
+export const UserSchema = Joi.object({
+  username: Joi.string().min(3).max(30),
+  email: Joi.string()
+    .required()
+    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } }),
+  password: Joi.string().required().min(7),
+  repeat_password: Joi.ref("password"),
+});
 
-  
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [confirmPassword, setconfirmPassword] = useState("");
-  const [error, setError] = useState({});
-  const [emailError, setEmailError] = useState("");
+  const [error, setError] = useState('');
+
   const [email2Error, setEmail2Error] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [success, setSuccess] = useState("");
+  
+
 
   let navigate = useNavigate();
   //function for saving the data
-  const addUser = async (e:any) => {
+  const addUser = async (e: any) => {
     try {
       e.preventDefault();
 
-      if (email === "") {
-        setEmailError("Please enter email");
-      } else if (password === "") {
-        setPasswordError("Please enter password");
-      } else if (confirmPassword === "") {
-        setError("Please confirm your password");
-      } else if (password.length < 7) {
-        setPasswordError("password must be more than 7");
-      } else if (password === confirmPassword) {
-        const { error, value } = UserSchema.validate({ username,password,email });
-        if(error){
-          setError(error)
-        }
-        const signup = await axios.post(
-          "/signup",
-          {
-           value
-          }
-          // {withCredentials: true}
-        );
-
+      const { error, value } = UserSchema.validate({
+        username,
+        password,
+        email,
+      });
+      if (error) {
+        setError(error.message);
+        
+      }else{
+        const signup = await axios.post("/signup", {
+          username,
+          password,
+          email,
+        });
+  
         setEmail("");
         setPassword("");
         setUsername("");
         setconfirmPassword("");
         const res = signup.data;
-
-        console.log(value)
-        //if user is saved navigate to the todo page
-        if(res.data){
-          navigate('/login')
-          console.log('ggg', res.data)
-        }
+  
         
-      } else {
-        setError("password do not match");
-        console.log("password do not match");
+        //if user is saved navigate to the todo page
+        if (res.user) {
+          setTimeout(() => {
+            navigate("/login");
+          }, 2000);
+        }
+       
       }
       //making a request to the api with axios for saving user data
-    } catch (error:any) {
+    } catch (error: any) {
       if (error.response.data.message.includes("Failed")) {
         setEmail2Error(error.response.data.message);
       }
@@ -86,7 +71,6 @@ const Signup = () => {
     }
   };
 
-  // console.log(email, password, username);
   return (
     <div>
       <Container fluid>
@@ -99,6 +83,10 @@ const Signup = () => {
                 </div>
 
                 <div className="full">
+                {error && <span> {error} </span>}
+                </div>
+
+                <div className="full">
                   <label>Username</label>
                   <input
                     type="text"
@@ -107,6 +95,7 @@ const Signup = () => {
                     placeholder="username"
                     onChange={(e) => setUsername(e.target.value)}
                   />
+                 
                 </div>
 
                 <div className="full">
@@ -118,7 +107,7 @@ const Signup = () => {
                     placeholder="******@gmail.com"
                     onChange={(e) => setEmail(e.target.value)}
                   />
-                  {!email && <span> {emailError} </span>}
+                 
                   {email2Error && <span> {email2Error} </span>}
                 </div>
 
@@ -131,7 +120,7 @@ const Signup = () => {
                     placeholder="*********"
                     onChange={(e) => setPassword(e.target.value)}
                   />
-                  <span> {passwordError} </span>
+                  
                 </div>
 
                 <div className="full">
@@ -144,7 +133,7 @@ const Signup = () => {
                     onChange={(e) => setconfirmPassword(e.target.value)}
                   />
 
-                  <span> {passwordError} </span>
+                  
                 </div>
 
                 <button
@@ -164,7 +153,7 @@ const Signup = () => {
         </Row>
       </Container>
     </div>
-  )
+  );
 };
 
 export default Signup;

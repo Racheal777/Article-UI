@@ -2,9 +2,13 @@ import React, { useState, useEffect } from "react";
 
 import "../App.css";
 // import {getArticle} from "../data"
-import { NavLink, Outlet } from "react-router-dom";
-
+import { NavLink } from "react-router-dom";
+import Card from 'react-bootstrap/Card';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
+import Button from 'react-bootstrap/Button';
 import axios from "axios";
+import Navbars from "../Components/Navbar";
 
 
 export interface PostAttribute {
@@ -16,10 +20,7 @@ export interface PostAttribute {
    
     
   }
-  type PropertyProps = {
-    posts: PostAttribute[];
-    //children: JSX.Element | JSX.Element[];
-  };
+  
 
 
 
@@ -48,26 +49,45 @@ const [articles, setArticles] = useState<PostAttribute[]>([])
 
   return (
     <div>
+
+<header>
+  <Navbars/>
+</header>
       <section className="article-main">
         <h1>Articles</h1>
 
-        <div className="article">
+        <div className='btn'>
+            <Button > <a href="/form">Add a post</a></Button>
+            </div>
+        
+        <Row xs={1} md={3} className="cards g-6">
           {articles.map((item) => (
-            <NavLink to={`/post/${item._id}`} key={item._id} className="links">
-              <div className="card">
+             <Col>
+             <Card className="cardz" key={item._id}>
+             <Card.Img variant="top" src="https://unsplash.com/photos/0J8thHZfosE" />
+             <Card.Body>
+
+            
+            <NavLink to={`/post/${item._id}`}  className="links">
+            <Card.Title>{item.title}</Card.Title>
+              
+              <Card.Text>
                 <div className="items">
-                  <h3> Author: {item.author} </h3>
-                  <h2>{item.title}</h2>
-                  <p>{item.description.slice(0, 200)} ...</p>
+                  <p> Author: {item.author} </p>
+                 
+                 
                 </div>
 
-                <div className="">
-                  <p><i>Published {item.published}</i></p>
-                </div>
-              </div>
+                
+                </Card.Text>
             </NavLink>
+            
+            </Card.Body>
+          </Card>
+        </Col>
           ))}
-        </div>
+         
+         </Row>
 
       </section>
     </div>

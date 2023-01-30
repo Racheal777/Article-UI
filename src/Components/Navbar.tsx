@@ -4,13 +4,13 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
+import '../App.css'
 
 function Navbars() {
   return (
     <Navbar bg="light" expand="lg">
       <Container fluid>
-        <Navbar.Brand href="#">Article</Navbar.Brand>
+        <Navbar.Brand href="#" className='Navbar'>Article</Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav
@@ -31,10 +31,11 @@ function Navbars() {
             />
             <Button variant="outline-success">Search</Button>
 
-            <div>
-            <Button variant="outline-success"> <a href="/login">Login</a></Button>
-            </div>
+            
           </Form>
+          <div className='btn'>
+            <Button > <a href="/login">Login</a></Button>
+            </div>
         </Navbar.Collapse>
       </Container>
     </Navbar>
